@@ -11,6 +11,22 @@ type Query {
     post(id: ID @eq): Post @find
 }
 
+type Mutation {
+    createPost(
+        user_id: ID!
+        title: String! @rules(apply: ["required", "min:3"])
+        body: String! @rules(apply: ["required", "min:3"])
+    ) : Post @create
+    updatePost(
+        id: ID!
+        title: String! @rules(apply: ["required", "min:3"])
+        body: String! @rules(apply: ["required", "min:3"])
+    ) : Post @update
+    deletePost(
+        id: ID!
+    ) : Post @delete
+}
+
 type User {
     id: ID!
     name: String!
