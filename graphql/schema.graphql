@@ -11,6 +11,7 @@ type Query {
     postsResolver: [Post!]!  @field(resolver: "App\\GraphQL\\Queries\\PostsResolver")
     post(id: ID @eq): Post @find
     postResolver(id: ID!): Post @field(resolver: "App\\GraphQL\\Queries\\PostResolver")
+    me: User @guard @auth
 }
 
 type Mutation {
@@ -32,6 +33,15 @@ type Mutation {
     deletePost(
         id: ID!
     ) : Post @delete
+    loginTest(
+        email: String!
+        password: String!
+        device_name: String!
+    ) : AccessTokenTest! @field(resolver: "App\\GraphQL\\Mutations\\LoginTestResolver")
+}
+
+type AccessTokenTest {
+    token: String!
 }
 
 type User {
@@ -51,3 +61,5 @@ type Post {
     created_at: DateTime!
     updated_at: DateTime!
 }
+
+#import sanctum.graphql

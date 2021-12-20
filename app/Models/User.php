@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\Contracts\HasApiTokens as HasApiTokensContract;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasApiTokensContract
 {
     use HasApiTokens, HasFactory, Notifiable;
 
