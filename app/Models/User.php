@@ -47,4 +47,11 @@ class User extends Authenticatable implements HasApiTokensContract
     {
         return $this->hasMany(Post::class);
     }
+
+    public function isAdmin()
+    {
+        return in_array($this->email, [
+            'andre@andre.com',
+        ]);
+    }
 }

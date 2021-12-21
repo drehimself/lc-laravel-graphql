@@ -5,7 +5,7 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 type Query {
-    users: [User!]! @paginate(defaultCount: 10)
+    users: [User!]! @all @guard @can(ability: "viewAny")
     user(id: ID @eq): User @find
     posts: [Post!]! @paginate(defaultCount: 10) @orderBy(column: "created_at", direction: DESC)
     postsResolver: [Post!]!  @field(resolver: "App\\GraphQL\\Queries\\PostsResolver")
@@ -16,10 +16,9 @@ type Query {
 
 type Mutation {
     createPost(
-        user_id: ID!
         title: String! @rules(apply: ["required", "min:3"])
         body: String! @rules(apply: ["required", "min:3"])
-    ) : Post @create
+    ) : Post @create @guard @inject(context: "user.id", name: "user_id")
     createPostResolver(
         user_id: ID!
         title: String! @rules(apply: ["required", "min:3"])
@@ -29,10 +28,10 @@ type Mutation {
         id: ID!
         title: String! @rules(apply: ["required", "min:3"])
         body: String! @rules(apply: ["required", "min:3"])
-    ) : Post @update
+    ) : Post @update @guard @can(ability: "update", find: "id")
     deletePost(
         id: ID!
-    ) : Post @delete
+    ) : Post @delete @guard @can(ability: "delete", find: "id")
     loginTest(
         email: String!
         password: String!
@@ -48,6 +47,7 @@ type User {
     id: ID!
     name: String!
     email: String!
+    is_admin: Boolean! @method(name: "isAdmin")
     posts: [Post!]! @hasMany
     created_at: DateTime!
     updated_at: DateTime!
